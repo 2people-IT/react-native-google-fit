@@ -567,6 +567,12 @@ class RNGoogleFit {
     return result;
   }
 
+  saveHeartRateSample = async (options) => {
+    options.date = Date.parse(options.date)
+    const result = await googleFit.saveHeartRateSample(options);
+    return result;
+  }
+
   saveBloodPressureSample = async (options) => {
     options.date = Date.parse(options.date)
     const result = await googleFit.saveBloodPressureSample(options);

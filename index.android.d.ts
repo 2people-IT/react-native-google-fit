@@ -127,6 +127,10 @@ declare module 'react-native-google-fit' {
       options: StartAndEndDate & Partial<BucketOptions>
     ) => Promise<OxygenSaturationResponse[]>;
 
+    saveHeartRateSample: (
+      options: { date: string, value: number },
+    ) => Promise<Boolean | undefined>
+
     saveBloodPressureSample: (
       options: { date: string, systolic: number, diastolic: number },
     ) => Promise<Boolean | undefined>

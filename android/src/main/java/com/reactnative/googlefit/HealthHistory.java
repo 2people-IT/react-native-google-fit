@@ -100,6 +100,19 @@ public class HealthHistory {
         return map;
     }
 
+    public boolean saveHeartRateSample(ReadableMap sample) {
+        this.Dataset = createDataForRequest(
+                this.dataType,
+                DataSource.TYPE_RAW,
+                sample.getDouble("value"),
+                (long)sample.getDouble("date"),
+                TimeUnit.MILLISECONDS
+        );
+        new InsertAndVerifyDataTask(this.Dataset).execute();
+
+        return true;
+    }
+
     public boolean saveBloodPressureSample(ReadableMap sample) {
         this.Dataset = createBloodPressureDataForRequest(
                 this.dataType,
