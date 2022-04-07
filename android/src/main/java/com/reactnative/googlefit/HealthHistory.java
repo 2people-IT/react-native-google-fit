@@ -101,10 +101,10 @@ public class HealthHistory {
     }
 
     public boolean saveBloodPressureSample(ReadableMap sample) {
-        this.Dataset = createDataForRequest(
+        this.Dataset = createBloodPressureDataForRequest(
                 this.dataType,
                 DataSource.TYPE_RAW,
-                (float) sample.getDouble("systolic"),
+                (float)sample.getDouble("systolic"),
                 (float)sample.getDouble("diastolic"),
                 (long)sample.getDouble("date"),
                 TimeUnit.MILLISECONDS
@@ -167,6 +167,36 @@ public class HealthHistory {
 
             return null;
         }
+    }
+
+     /**
+     * This method creates a dataset object to be able to insert data in google fit
+     * @param dataType DataType Fitness Data Type object
+     * @param dataSourceType int Data Source Id. For example, DataSource.TYPE_RAW
+     * @param systolic Object Values for the fitness data. They must be int or float
+     * @param diastolic Object Values for the fitness data. They must be int or float
+     * @param date long Time when the activity started
+     * @param timeUnit TimeUnit Time unit in which period is expressed
+     * @return
+     */
+    private DataSet createBloodPressureDataForRequest(DataType dataType, int dataSourceType, float systolic,
+                                                        float diastolic, long date, TimeUnit timeUnit) {
+        DataSource dataSource = new DataSource.Builder()
+                .setAppPackageName(GoogleFitPackage.PACKAGE_NAME)
+                .setDataType(dataType)
+                .setType(dataSourceType)
+                .build();
+
+        DataSet dataSet = DataSet.create(dataSource);
+        DataPoint bloodPressure = DataPoint.create(dataSource);
+        
+        bloodPressure.setTimestamp(date, timeUnit);
+        bloodPressure.getValue(HealthFields.FIELD_BLOOD_PRESSURE_SYSTOLIC).setFloat(systolic);
+        bloodPressure.getValue(HealthFields.FIELD_BLOOD_PRESSURE_DIASTOLIC).setFloat(diastolic);
+
+        dataSet.add(bloodPressure);
+
+        return dataSet;
     }
 
     /**

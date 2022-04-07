@@ -657,7 +657,6 @@ class RNGoogleFit {
       }
     )
   }
-}
 
   /**
    * Get the sleep sessions over a specified date range.
