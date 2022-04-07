@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static com.google.android.gms.fitness.data.Field.FIELD_MEAL_TYPE;
+import static com.google.android.gms.fitness.data.Field.FIELD_BPM;
 import static com.google.android.gms.fitness.data.HealthFields.FIELD_BLOOD_GLUCOSE_LEVEL;
 import static com.google.android.gms.fitness.data.HealthFields.FIELD_BLOOD_GLUCOSE_SPECIMEN_SOURCE;
 import static com.google.android.gms.fitness.data.HealthFields.FIELD_TEMPORAL_RELATION_TO_MEAL;
@@ -101,7 +102,7 @@ public class HealthHistory {
     }
 
     public boolean saveHeartRateSample(ReadableMap sample) {
-        this.Dataset = createDataForRequest(
+        this.Dataset = createHeartRateDataForRequest(
                 this.dataType,
                 DataSource.TYPE_RAW,
                 sample.getDouble("value"),
@@ -180,6 +181,34 @@ public class HealthHistory {
 
             return null;
         }
+    }
+
+    /**
+     * This method creates a dataset object to be able to insert data in google fit
+     * @param dataType DataType Fitness Data Type object
+     * @param dataSourceType int Data Source Id. For example, DataSource.TYPE_RAW
+     * @param value Object Values for the fitness data. They must be int or float
+     * @param date long Time when the activity started
+     * @param timeUnit TimeUnit Time unit in which period is expressed
+     * @return
+     */
+    private DataSet createHeartRateDataForRequest(DataType dataType, int dataSourceType, double value,
+                                            long date, TimeUnit timeUnit) {
+        DataSource dataSource = new DataSource.Builder()
+                .setAppPackageName(GoogleFitPackage.PACKAGE_NAME)
+                .setDataType(dataType)
+                .setType(dataSourceType)
+                .build();
+
+        DataSet dataSet = DataSet.create(dataSource);
+        DataPoint dataPoint = dataSet.createDataPoint();
+
+        dataPoint.setTimestamp(date, timeUnit);
+        dataPoint.getValue(FIELD_BPM).setFloat((float) value);
+
+        dataSet.add(dataPoint);
+
+        return dataSet;
     }
 
      /**
