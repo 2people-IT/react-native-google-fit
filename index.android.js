@@ -567,6 +567,12 @@ class RNGoogleFit {
     return result;
   }
 
+  saveBloodPressureSample = async (options) => {
+    options.date = Date.parse(options.date)
+    const result = await googleFit.saveBloodPressureSample(options);
+    return result;
+  }
+
   getBloodGlucoseSamples = async (options, callback) => {
     const { startDate, endDate, bucketInterval, bucketUnit } = prepareInput(options);
     const result = await googleFit.getBloodGlucoseSamples(
@@ -651,6 +657,7 @@ class RNGoogleFit {
       }
     )
   }
+}
 
   /**
    * Get the sleep sessions over a specified date range.

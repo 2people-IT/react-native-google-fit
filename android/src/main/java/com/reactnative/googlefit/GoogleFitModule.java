@@ -384,6 +384,17 @@ public class GoogleFitModule extends ReactContextBaseJavaModule implements Lifec
     }
 
     @ReactMethod
+    public void saveBloodPressureSample(ReadableMap bloodPressureSample, Promise promise) {
+        try {
+            BloodPressureHistory bodyHistory = mGoogleFitManager.getBloodPressureHistory();
+            healthHistory.setDataType(HealthDataTypes.TYPE_BLOOD_PRESSURE);
+            healthHistory.saveBloodPressureSample(bloodPressureSample);
+        } catch (Error e) {
+            promise.reject(e);
+        }
+    }
+
+    @ReactMethod
     public void getBodyTemperatureSamples(double startDate,
                                        double endDate,
                                        int bucketInterval,
